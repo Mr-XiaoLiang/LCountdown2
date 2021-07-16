@@ -12,4 +12,7 @@ class AdjustmentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding)
     }
+
+
+
 }
