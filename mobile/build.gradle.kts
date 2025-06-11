@@ -1,16 +1,21 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 android {
     namespace = "com.lollipop.countdown"
     compileSdk = 36
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.lollipop.countdown"
         minSdk = 21
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 1_00_00
+        versionName = "1.0.0"
     }
 
     buildTypes {
@@ -26,8 +31,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 dependencies {
-    implementation(libs.appcompat.v7)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.core.ktx)
 }

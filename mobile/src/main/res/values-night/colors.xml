@@ -8,7 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="background_content">#FFFFFFFF</color>
-    <color name="background_window">#FF000000</color>
-    <color name="action_on_window">#FFFFFFFF</color>
+    <color name="background_content">#373737</color>
 </resources>
