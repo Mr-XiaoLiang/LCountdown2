@@ -2,4 +2,5 @@
 <resources>
     <dimen name="option_button_size">48dp</dimen>
     <dimen name="option_button_padding">12dp</dimen>
+    <dimen name="content_panel_radius">24dp</dimen>
 </resources>

@@ -2,17 +2,24 @@ package com.lollipop.countdown.base
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
+import android.view.RoundedCorner
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lollipop.countdown.R
 import com.lollipop.countdown.databinding.ActivityBasicBinding
+import kotlin.math.max
+
 
 abstract class BasicActivity : AppCompatActivity() {
 
@@ -24,19 +31,26 @@ abstract class BasicActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(basicBinding.root)
+        enableEdgeToEdge()
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = false
+        }
         basicBinding.contentPanel.addView(
             onCreateContentView(),
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
+        basicBinding.backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         ViewCompat.setOnApplyWindowInsetsListener(basicBinding.root) { v, insets ->
             val systemBar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBar.left,
+                systemBar.top,
+                systemBar.right,
                 systemBar.bottom
             )
             insets

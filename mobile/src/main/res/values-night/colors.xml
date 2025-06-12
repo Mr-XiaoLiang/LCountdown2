@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="background_content">#373737</color>
+    <color name="navigation_background">#373737</color>
+    <color name="navigation_icon">#F0F0F0</color>
 </resources>

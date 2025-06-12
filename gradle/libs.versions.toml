@@ -7,6 +7,7 @@ constraintlayout = "2.2.1"
 wear = "1.3.0"
 wearInput = "1.1.0"
 coreKtxVersion = "1.16.0"
+recyclerview = "1.4.0"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -16,6 +17,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 wear = { module = "androidx.wear:wear", version.ref = "wear" }
 wear-input = { module = "androidx.wear:wear-input", version.ref = "wearInput" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

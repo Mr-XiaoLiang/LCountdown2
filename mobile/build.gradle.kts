@@ -38,5 +38,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     implementation(libs.core.ktx)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.constraintlayout)
 }

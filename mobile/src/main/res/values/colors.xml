@@ -11,4 +11,7 @@
     <color name="background_content">#FFFFFFFF</color>
     <color name="background_window">#FF000000</color>
     <color name="action_on_window">#FFFFFFFF</color>
+
+    <color name="navigation_background">#FFFFFFFF</color>
+    <color name="navigation_icon">#FF000000</color>
 </resources>
