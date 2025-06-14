@@ -11,4 +11,12 @@
     <color name="background_content">#373737</color>
     <color name="navigation_background">#373737</color>
     <color name="navigation_icon">#F0F0F0</color>
+
+    <color name="light_bar_background">#364342</color>
+    <color name="light_bar_text">#F0F0F0</color>
+
+    <color name="item_background_on_content">#090808</color>
+    <color name="item_text_on_content">#D0D0D0</color>
+
+    <color name="summary_on_content">#D0D0D0</color>
 </resources>

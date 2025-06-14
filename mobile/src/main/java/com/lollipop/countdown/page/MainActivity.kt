@@ -1,7 +1,9 @@
-package com.lollipop.countdown
+package com.lollipop.countdown.page
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.lollipop.countdown.R
 import com.lollipop.countdown.base.BasicActivity
 import com.lollipop.countdown.databinding.ActivityMainBinding
 
@@ -25,7 +27,7 @@ class MainActivity : BasicActivity() {
 
         }
         binding.timerButton.setOnClickListener {
-
+            startActivity(Intent(this, TimerCreateActivity::class.java))
         }
         binding.countdownButton.setOnClickListener {
 
