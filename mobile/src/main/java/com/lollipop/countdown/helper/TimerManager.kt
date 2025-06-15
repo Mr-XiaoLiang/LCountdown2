@@ -17,4 +17,14 @@ class TimerManager(private val context: Context) {
             .show()
     }
 
+    fun addCountdown(time: Long) {
+        // TODO
+        Toast.makeText(
+            context,
+            "TimerManager.addCountdown(${time.toString(16)})",
+            Toast.LENGTH_SHORT
+        )
+            .show()
+    }
+
 }
