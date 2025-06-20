@@ -1,36 +1,25 @@
 package com.lollipop.countdown.calculator
 
-sealed class Operator(val level: Level) {
+enum class Operator {
 
     /**
-     *  加
+     * 加号
      */
-    object Add : Operator(Level.L1)
+    PLUS,
 
     /**
-     * 减
+     * 减号
      */
-    object Sub : Operator(Level.L1)
+    MINUS,
 
     /**
-     * 乘
+     * 乘号
      */
-    object Mul : Operator(Level.L2)
+    MULTIPLY,
 
     /**
-     * 除
+     * 除号
      */
-    object Div : Operator(Level.L2)
-
-    /**
-     * 等于
-     */
-    object Equals : Operator(Level.L0)
-
-    enum class Level {
-        L0,
-        L1,
-        L2,
-    }
+    DIVIDE,
 
 }
