@@ -1,15 +1,35 @@
 package com.lollipop.countdown.calculator
 
-interface ButtonHolder {
+import android.view.View
 
-    val buttonKey: ButtonKey
+class ButtonManager(
+    private val buttonClickListener: ButtonClickListener
+) {
 
-    fun setEnable(enable: Boolean)
+    val buttonList = mutableListOf<ButtonHolder>()
+
+    fun register(key: ButtonKey, button: View) {
+        buttonList.add(ButtonHolder(button, key, buttonClickListener))
+    }
 
 }
 
-interface ButtonController {
 
-    fun updateButton(callback: (ButtonHolder) -> Unit)
+class ButtonHolder(
+    val view: View,
+    val buttonKey: ButtonKey,
+    val clickListener: ButtonClickListener
+) {
+
+    init {
+        view.setOnClickListener {
+            clickListener.onButtonClick(buttonKey)
+        }
+    }
 
 }
+
+fun interface ButtonClickListener {
+    fun onButtonClick(button: ButtonKey)
+}
+

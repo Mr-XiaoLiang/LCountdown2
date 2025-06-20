@@ -3,6 +3,11 @@ package com.lollipop.countdown.calculator
 enum class Operator {
 
     /**
+     * 默认的，它等价于 +
+     */
+    DEFAULT,
+
+    /**
      * 加号
      */
     PLUS,

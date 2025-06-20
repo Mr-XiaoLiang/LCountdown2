@@ -6,3 +6,7 @@ sealed class DateResult {
     class Duration(val value: Long)
 
 }
+
+fun interface PreviewCallback {
+    fun onPreview(result: DateResult?)
+}
