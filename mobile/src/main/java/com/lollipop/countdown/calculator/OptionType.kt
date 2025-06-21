@@ -4,6 +4,7 @@ enum class OptionType {
     None,
     Year,
     Month,
+    Week,
     Day,
     Hour,
     Minute,

@@ -25,6 +25,10 @@ enum class Operator {
     /**
      * 除号
      */
-    DIVIDE,
+    DIVIDE;
+
+    fun isHighLevel(): Boolean {
+        return this == MULTIPLY || this == DIVIDE
+    }
 
 }

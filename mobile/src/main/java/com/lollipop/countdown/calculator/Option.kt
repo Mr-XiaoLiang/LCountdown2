@@ -2,10 +2,33 @@ package com.lollipop.countdown.calculator
 
 class Option {
 
-    var value: Long = 0
+    companion object {
+        const val DEFAULT_VALUE = 0L
 
-    var operator: Operator = Operator.DEFAULT
+        @JvmStatic
+        val DEFAULT_OPERATOR = Operator.DEFAULT
 
-    var type: OptionType = OptionType.None
+        @JvmStatic
+        val DEFAULT_TYPE = OptionType.None
+    }
+
+    var value: Long = DEFAULT_VALUE
+
+    var operator: Operator = DEFAULT_OPERATOR
+
+    var type: OptionType = DEFAULT_TYPE
+
+    fun isEmpty(): Boolean {
+        if (value != DEFAULT_VALUE) {
+            return false
+        }
+        if (operator != Operator.DEFAULT) {
+            return false
+        }
+        if (type != DEFAULT_TYPE) {
+            return false
+        }
+        return true
+    }
 
 }

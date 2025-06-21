@@ -1,8 +1,8 @@
 package com.lollipop.countdown.calculator
 
-import android.view.View
-
-class DateCalculator : ButtonClickListener {
+class DateCalculator(
+    private val callback: CalculatorCallback
+) : ButtonClickListener {
 
     private val buttonManager = ButtonManager(this)
 
@@ -18,22 +18,45 @@ class DateCalculator : ButtonClickListener {
         }
     }
 
-    fun register(key: ButtonKey, view: View) {
-        buttonManager.register(key, view)
+    fun register(holder: ButtonHolder) {
+        buttonManager.register(holder)
     }
 
     override fun onButtonClick(button: ButtonKey) {
-        focus().push(button)
+        val focus = focus()
+        focus.push(button)
+        mayNeedNewFormula()
+        callback.onFormulaChanged()
+    }
+
+    private fun mayNeedNewFormula() {
+        val current = currentFormula
+        if (current == null) {
+            return
+        }
+        val formula = current.getFinallyFormula()
+        if (formula != null) {
+            historyList.add(formula)
+            currentFormula = null
+        }
+        callback.onHistoryChanged()
     }
 
     private fun focus(): FormulaCalculator {
-        return currentFormula ?: FormulaCalculator(previewWrapper).also {
+        return currentFormula ?: FormulaCalculator(buttonManager, previewWrapper).also {
             currentFormula = it
         }
     }
 
     private fun notifyPreview(result: DateResult?) {
         previewCallback?.onPreview(result)
+    }
+
+    interface CalculatorCallback {
+
+        fun onHistoryChanged()
+        fun onFormulaChanged()
+
     }
 
 }

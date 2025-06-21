@@ -120,6 +120,33 @@ enum class ButtonKey {
     /**
      * 清除
      */
-    CLEAR,
+    CLEAR;
+
+    fun isNumber(): Boolean {
+        return this in arrayOf(
+            NUMBER_0,
+            NUMBER_1,
+            NUMBER_2,
+            NUMBER_3,
+            NUMBER_4,
+            NUMBER_5,
+            NUMBER_6,
+            NUMBER_7,
+            NUMBER_8,
+            NUMBER_9
+        )
+    }
+
+    fun isMathHighLevelOperator(): Boolean {
+        return this in arrayOf(MULTIPLY, DIVIDE)
+    }
+
+    fun isMathLowLevelOperator(): Boolean {
+        return this in arrayOf(PLUS, MINUS)
+    }
+
+    fun isDateOperator(): Boolean {
+        return this in arrayOf(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND)
+    }
 
 }

@@ -1,22 +1,57 @@
 package com.lollipop.countdown.calculator
 
 import android.util.Log
+import com.lollipop.countdown.calculator.abacus.DateAbacus
+import com.lollipop.countdown.calculator.abacus.NumberAbacus
+import java.util.Calendar
 
 class FormulaCalculator(
+    private val buttonProvider: ButtonProvider,
     private val previewCallback: PreviewCallback
-) {
+) : ButtonController {
 
     /**
      * 运算操作的列表
      */
     val optionList = mutableListOf<Option>()
 
+    var finallyResult: DateResult? = null
+        private set
+
+    val isComplete: Boolean
+        get() {
+            return finallyResult != null
+        }
+
+    private val calendar by lazy {
+        Calendar.getInstance()
+    }
+
+    fun fetch() {
+        // 检查当前状态
+        updateButton()
+        // 更新预览
+        preview()
+    }
+
+    fun getFinallyFormula(): Formula? {
+        val dateResult = finallyResult
+        return if (dateResult != null) {
+            Formula(optionList, dateResult)
+        } else {
+            null
+        }
+    }
+
     /**
      * 按下一个按键的时候
      */
     fun push(key: ButtonKey) {
+        logD("push $key")
         // 先分发按钮
         dispatch(key)
+        // 更新按钮，有些操作对于部分按钮不适合
+        updateButton()
         // 预览
         preview()
     }
@@ -214,8 +249,14 @@ class FormulaCalculator(
         }
     }
 
-    private fun calculate() {
-        // TODO
+    fun calculate(): Result<DateResult> {
+        val result = calculateImpl()
+        result.getOrNull()?.let {
+            if (it != DateResult.None) {
+                this.finallyResult = it
+            }
+        }
+        return result
     }
 
     /**
@@ -226,7 +267,133 @@ class FormulaCalculator(
     }
 
     private fun preview() {
-        // TODO
+        val result = calculateImpl().getOrNull()
+        logD("preview: $result")
+        previewCallback.onPreview(result)
+    }
+
+    private fun calculateImpl(): Result<DateResult> {
+        return try {
+            finallyResult?.let {
+                return Result.success(it)
+            }
+            if (optionList.isEmpty()) {
+                return Result.success(DateResult.None)
+            }
+            var result: DateResult = DateResult.START_TIME
+            optionList.forEach { option ->
+                result = summation(result, option)
+            }
+            Result.success(result)
+        } catch (e: Throwable) {
+            logE("calculate error", e)
+            Result.failure(e)
+        }
+    }
+
+    private fun summation(source: DateResult, option: Option): DateResult {
+        val type = option.type
+        val operator = option.operator
+        val value = option.value
+        when (type) {
+            OptionType.None -> {
+                return NumberAbacus.turn(source, value, operator)
+            }
+
+            OptionType.Year -> {
+                return DateAbacus.turnYear(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Month -> {
+                return DateAbacus.turnMonth(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Week -> {
+                return DateAbacus.turnWeek(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Day -> {
+                return DateAbacus.turnDay(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Hour -> {
+                return DateAbacus.turnHour(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Minute -> {
+                return DateAbacus.turnMinute(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Second -> {
+                return DateAbacus.turnSecond(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Millisecond -> {
+                return DateAbacus.turnMillisecond(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+        }
+    }
+
+    private fun updateButton() {
+        buttonProvider.updateButtons(this)
+    }
+
+    override fun updateButton(holder: ButtonHolder) {
+        if (isComplete) {
+            holder.setEnable(false)
+            return
+        }
+        val focus = optFocus()
+        val buttonKey = holder.buttonKey
+        if (buttonKey.isDateOperator()) {
+            // 如果操作符是高阶函数，比如乘法和除法，就不能输入日期
+            holder.setEnable(!(focus.operator.isHighLevel()))
+        } else if (buttonKey.isMathHighLevelOperator()) {
+            // 如果当前不是日期类型，那么就可以使用高阶函数
+            holder.setEnable(focus.type == OptionType.None)
+        } else if (buttonKey == ButtonKey.CLEAR || buttonKey == ButtonKey.BACKSPACE) {
+            holder.setEnable(optionList.size > 1 || !(focus.isEmpty()))
+        }
     }
 
     private fun logE(message: String, e: Throwable) {
@@ -236,5 +403,6 @@ class FormulaCalculator(
     private fun logD(message: String) {
         Log.e("FormulaCalculator", message)
     }
+
 
 }
