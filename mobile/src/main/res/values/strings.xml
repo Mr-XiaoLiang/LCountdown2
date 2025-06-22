@@ -4,4 +4,12 @@
     <string name="label_button_countdown">倒计时</string>
     <string name="done">完成</string>
     <string name="clipboard">剪切板</string>
+    <string name="label_year">年</string>
+    <string name="label_month">月</string>
+    <string name="label_week">周</string>
+    <string name="label_day">日</string>
+    <string name="label_hour">时</string>
+    <string name="label_minute">分</string>
+    <string name="label_second">秒</string>
+    <string name="label_millisecond">毫秒</string>
 </resources>

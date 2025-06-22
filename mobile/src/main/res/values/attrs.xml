@@ -3,4 +3,8 @@
     <declare-styleable name="ClipFrameLayout">
         <attr name="clipRadius" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="KeyboardLayout_Layout">
+        <attr name="keyRowSpan" format="integer" />
+        <attr name="keyColumnSpan" format="integer" />
+    </declare-styleable>
 </resources>

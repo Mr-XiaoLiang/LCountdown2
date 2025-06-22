@@ -16,6 +16,7 @@
     <color name="navigation_icon">#FF000000</color>
 
     <color name="light_bar_background">#BAEBE7</color>
+    <color name="light_bar_background_pressed">#A0C8C5</color>
     <color name="light_bar_text">#333333</color>
 
     <color name="item_background_on_content">#DDF0EF</color>
