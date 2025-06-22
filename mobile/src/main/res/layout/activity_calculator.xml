@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:paddingHorizontal="16dp"
-        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintHeight_percent="0.35"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -154,125 +154,358 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.lollipop.countdown.view.KeyboardLayout
         android:id="@+id/keyboardPanel"
         android:layout_width="match_parent"
         android:layout_height="0px"
+        android:padding="16dp"
+        app:keyboardIntervalHorizontal="16dp"
+        app:keyboardIntervalVertical="16dp"
+        app:keyboardXCount="4"
+        app:keyboardYCount="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/optionTypeBar">
 
-        <ImageView
+        <FrameLayout
             android:id="@+id/clearAllButton"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintBottom_toTopOf="@id/number7Button"
-            app:layout_constraintEnd_toStartOf="@id/backspaceButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.15" />
+            android:background="@drawable/bg_calculator_button"
+            app:keyGridX="0"
+            app:keyGridY="0"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/backspaceButton"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="1"
+            app:keyGridY="0"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
-            android:id="@+id/plusButton"
-            android:layout_width="0px"
-            android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
 
-        <ImageView
-            android:id="@+id/minusButton"
-            android:layout_width="0px"
-            android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/multiplyButton"
-            android:layout_width="0px"
-            android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageView
+        <FrameLayout
             android:id="@+id/divideButton"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="3"
+            app:keyGridY="0"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/multiplyButton"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="3"
+            app:keyGridY="1"
+            app:keySpanX="1"
+            app:keySpanY="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/minusButton"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="3"
+            app:keyGridY="2"
+            app:keySpanX="1"
+            app:keySpanY="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/plusButton"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="3"
+            app:keyGridY="3"
+            app:keySpanX="1"
+            app:keySpanY="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/equalButton"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="2"
+            app:keyGridY="4"
+            app:keySpanX="2"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_equal_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number1Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="0"
+            app:keyGridY="3"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number2Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="1"
+            app:keyGridY="3"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number3Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="2"
+            app:keyGridY="3"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number4Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="0"
+            app:keyGridY="2"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number5Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="1"
+            app:keyGridY="2"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number6Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="2"
+            app:keyGridY="2"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number7Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="0"
+            app:keyGridY="1"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number8Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="1"
+            app:keyGridY="1"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number9Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="2"
+            app:keyGridY="1"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number0Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="1"
+            app:keyGridY="4"
+            app:keySpanX="1"
+            app:keySpanY="1">
 
-        <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/number00Button"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:src="@mipmap/ic_launcher" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@drawable/bg_calculator_button"
+            android:src="@mipmap/ic_launcher"
+            app:keyGridX="0"
+            app:keyGridY="4"
+            app:keySpanX="1"
+            app:keySpanY="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_done_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+    </com.lollipop.countdown.view.KeyboardLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

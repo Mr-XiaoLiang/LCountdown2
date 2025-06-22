@@ -13,7 +13,14 @@ class KeyboardLayout @JvmOverloads constructor(
     attributeSet: AttributeSet? = null
 ) : FrameLayout(context, attributeSet) {
 
+    /**
+     * 水平间隔
+     */
     private var intervalHorizontal = 0
+
+    /**
+     * 垂直间隔
+     */
     private var intervalVertical = 0
 
     /**
@@ -25,6 +32,31 @@ class KeyboardLayout @JvmOverloads constructor(
      * 行数
      */
     private var countY = 1
+
+    init {
+        context.withStyledAttributes(attributeSet, R.styleable.KeyboardLayout) {
+            intervalHorizontal = getDimensionPixelSize(
+                R.styleable.KeyboardLayout_keyboardIntervalHorizontal, 0
+            )
+            intervalVertical = getDimensionPixelSize(
+                R.styleable.KeyboardLayout_keyboardIntervalVertical, 0
+            )
+            countX = getInteger(R.styleable.KeyboardLayout_keyboardXCount, 1)
+            countY = getInteger(R.styleable.KeyboardLayout_keyboardYCount, 1)
+        }
+    }
+
+    fun setGrid(countX: Int, countY: Int) {
+        this.countX = countX
+        this.countY = countY
+        requestLayout()
+    }
+
+    fun setGridInterval(intervalHorizontal: Int, intervalVertical: Int) {
+        this.intervalHorizontal = intervalHorizontal
+        this.intervalVertical = intervalVertical
+        requestLayout()
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -39,8 +71,8 @@ class KeyboardLayout @JvmOverloads constructor(
                 continue
             }
             val lp = child.layoutParams as LayoutParams
-            val childWidth = getChildWidth(itemWidth, lp.columnSpan)
-            val childHeight = getChildHeight(itemHeight, lp.rowSpan)
+            val childWidth = getChildWidth(itemWidth, lp.spanX)
+            val childHeight = getChildHeight(itemHeight, lp.spanY)
             child.measure(
                 MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
@@ -54,15 +86,17 @@ class KeyboardLayout @JvmOverloads constructor(
         val itemHeight = getItemHeight(height)
 
         val count = childCount
-        var indexX = 0
-        var indexY = 0
         for (index in 0 until count) {
             val child = getChildAt(index)
             if (child.isGone) {
                 continue
             }
             val lp = child.layoutParams as LayoutParams
-            // TODO
+            val childWidth = getChildWidth(itemWidth, lp.spanX)
+            val childHeight = getChildHeight(itemHeight, lp.spanY)
+            val childLeft = getChildLeft(itemWidth, lp.gridX)
+            val childTop = getChildTop(itemHeight, lp.gridY)
+            child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight)
         }
     }
 
@@ -132,16 +166,20 @@ class KeyboardLayout @JvmOverloads constructor(
 
     class LayoutParams : FrameLayout.LayoutParams {
 
-        var columnSpan = 1
-        var rowSpan = 1
+        var spanX = 1
+        var spanY = 1
+        var gridX = 0
+        var gridY = 0
 
         constructor(
             context: Context,
             attributeSet: AttributeSet?
         ) : super(context, attributeSet) {
             context.withStyledAttributes(attributeSet, R.styleable.KeyboardLayout_Layout) {
-                columnSpan = getInt(R.styleable.KeyboardLayout_Layout_keyColumnSpan, 1)
-                rowSpan = getInt(R.styleable.KeyboardLayout_Layout_keyRowSpan, 1)
+                spanX = getInt(R.styleable.KeyboardLayout_Layout_keySpanX, 1)
+                spanY = getInt(R.styleable.KeyboardLayout_Layout_keySpanY, 1)
+                gridX = getInt(R.styleable.KeyboardLayout_Layout_keyGridX, 0)
+                gridY = getInt(R.styleable.KeyboardLayout_Layout_keyGridY, 0)
             }
         }
 
@@ -155,8 +193,10 @@ class KeyboardLayout @JvmOverloads constructor(
         ) : super(lp) {
             when (lp) {
                 is LayoutParams -> {
-                    columnSpan = lp.columnSpan
-                    rowSpan = lp.rowSpan
+                    spanX = lp.spanX
+                    spanY = lp.spanY
+                    gridX = lp.gridX
+                    gridY = lp.gridY
                 }
             }
         }
