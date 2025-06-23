@@ -25,6 +25,11 @@
             android:name=".page.CountdownCreateActivity"
             android:enabled="true"
             android:exported="true" />
+
+        <activity
+            android:name=".page.CalculatorActivity"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

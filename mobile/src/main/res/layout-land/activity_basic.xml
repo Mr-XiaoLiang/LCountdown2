@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_window"
-    android:orientation="horizontal"
-    tools:paddingTop="24dp">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="@dimen/option_button_size"
@@ -26,7 +24,7 @@
             android:id="@+id/optionBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="end"
+            android:gravity="bottom|center_horizontal"
             android:orientation="horizontal" />
     </LinearLayout>
 
@@ -34,10 +32,6 @@
         android:id="@+id/contentPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@color/background_content"
         android:elevation="5dp"
         app:clipRadius="@dimen/content_panel_radius" />

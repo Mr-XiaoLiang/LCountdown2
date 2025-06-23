@@ -24,13 +24,13 @@ class MainActivity : BasicActivity() {
 
     private fun initView() {
         addOption(R.drawable.baseline_calculate_24) {
-
+            startActivity(Intent(this, CalculatorActivity::class.java))
         }
         binding.timerButton.setOnClickListener {
             startActivity(Intent(this, TimerCreateActivity::class.java))
         }
         binding.countdownButton.setOnClickListener {
-
+            startActivity(Intent(this, CountdownCreateActivity::class.java))
         }
     }
 

@@ -2,14 +2,11 @@ package com.lollipop.countdown.base
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
-import android.view.RoundedCorner
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -47,11 +44,16 @@ abstract class BasicActivity : AppCompatActivity() {
         }
         ViewCompat.setOnApplyWindowInsetsListener(basicBinding.root) { v, insets ->
             val systemBar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val minEdge = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16F,
+                resources.displayMetrics
+            ).toInt()
             v.setPadding(
-                systemBar.left,
-                systemBar.top,
-                systemBar.right,
-                systemBar.bottom
+                max(systemBar.left, minEdge),
+                max(systemBar.top, minEdge),
+                max(systemBar.right, minEdge),
+                max(systemBar.bottom, minEdge)
             )
             insets
         }
