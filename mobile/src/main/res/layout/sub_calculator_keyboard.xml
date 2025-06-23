@@ -18,6 +18,7 @@
             android:paddingHorizontal="8dp">
 
             <TextView
+                android:id="@+id/yearButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -32,6 +33,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/monthButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -46,6 +48,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/weekButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -60,6 +63,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/dayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -74,6 +78,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/hourButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -88,6 +93,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/minuteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -102,6 +108,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/secondButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -116,6 +123,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
+                android:id="@+id/millisecondButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -257,7 +265,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/equalButton"
+            android:id="@+id/equalsButton"
             android:layout_width="0px"
             android:layout_height="0px"
             android:background="@drawable/bg_calculator_button"
