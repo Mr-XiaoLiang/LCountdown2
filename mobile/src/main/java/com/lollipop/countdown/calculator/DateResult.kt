@@ -21,3 +21,7 @@ sealed class DateResult {
 fun interface PreviewCallback {
     fun onPreview(result: DateResult?)
 }
+
+fun interface FormulaChangedCallback {
+    fun onFormulaChanged(formula: FormulaChanged)
+}

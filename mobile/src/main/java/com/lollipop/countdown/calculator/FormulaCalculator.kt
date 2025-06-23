@@ -7,6 +7,7 @@ import java.util.Calendar
 
 class FormulaCalculator(
     private val buttonProvider: ButtonProvider,
+    private val changedCallback: FormulaChangedCallback,
     private val previewCallback: PreviewCallback
 ) : ButtonController {
 
@@ -27,6 +28,13 @@ class FormulaCalculator(
         Calendar.getInstance()
     }
 
+    fun reset(options: List<Option>) {
+        optionList.clear()
+        optionList.addAll(options)
+        finallyResult = null
+        notifyAllChanged()
+    }
+
     fun fetch() {
         // 检查当前状态
         updateButton()
@@ -43,6 +51,10 @@ class FormulaCalculator(
         }
     }
 
+    fun toFormula(): Formula {
+        return Formula(optionList, finallyResult ?: DateResult.None)
+    }
+
     /**
      * 按下一个按键的时候
      */
@@ -50,10 +62,7 @@ class FormulaCalculator(
         logD("push $key")
         // 先分发按钮
         dispatch(key)
-        // 更新按钮，有些操作对于部分按钮不适合
-        updateButton()
-        // 预览
-        preview()
+        fetch()
     }
 
     /**
@@ -65,9 +74,7 @@ class FormulaCalculator(
             return optionList.last()
         }
         // 最后还是没有，就创建一个
-        val option = Option()
-        optionList.add(option)
-        return option
+        return pushNewOption()
     }
 
     /**
@@ -180,8 +187,10 @@ class FormulaCalculator(
         val focus = optFocus()
         if (focus.operator == Operator.DEFAULT) {
             focus.operator = operator
+            notifyFocusOptionChanged()
         } else {
             pushNewOption().operator = operator
+            notifyPushNewOption()
         }
     }
 
@@ -196,6 +205,7 @@ class FormulaCalculator(
                     return
                 }
                 value = newValue
+                notifyFocusOptionChanged()
             }
         } catch (e: Throwable) {
             logE("pushNumber error", e)
@@ -209,8 +219,10 @@ class FormulaCalculator(
         val focus = optFocus()
         if (focus.type == OptionType.None) {
             focus.type = value
+            notifyFocusOptionChanged()
         } else {
             pushNewOption().type = value
+            notifyPushNewOption()
         }
     }
 
@@ -231,22 +243,42 @@ class FormulaCalculator(
         // 值不为0的时候，就减掉一个
         if (option.value > 0) {
             option.value = option.value.div(10)
+            notifyFocusOptionChanged()
             return
         }
         // 类型不为none的时候，就设置为none
         if (option.type != OptionType.None) {
             option.type = OptionType.None
+            notifyFocusOptionChanged()
             return
         }
         // 运算符不为none的时候，就设置为none
         if (option.operator != Operator.DEFAULT) {
             option.operator = Operator.DEFAULT
+            notifyFocusOptionChanged()
             return
         }
         // 如果不是optionList的最后一个，就删除这个option
         if (optionList.size > 1) {
             optionList.removeAt(optionList.lastIndex)
+            notifyFocusOptionRemoved()
         }
+    }
+
+    private fun notifyPushNewOption() {
+        changedCallback.onFormulaChanged(FormulaChanged.Added(optionList.lastIndex))
+    }
+
+    private fun notifyFocusOptionChanged() {
+        changedCallback.onFormulaChanged(FormulaChanged.Changed(optionList.lastIndex))
+    }
+
+    private fun notifyFocusOptionRemoved() {
+        changedCallback.onFormulaChanged(FormulaChanged.Removed(optionList.lastIndex))
+    }
+
+    private fun notifyAllChanged() {
+        changedCallback.onFormulaChanged(FormulaChanged.All)
     }
 
     fun calculate(): Result<DateResult> {
@@ -264,6 +296,7 @@ class FormulaCalculator(
      */
     private fun clear() {
         optionList.clear()
+        notifyAllChanged()
     }
 
     private fun preview() {
