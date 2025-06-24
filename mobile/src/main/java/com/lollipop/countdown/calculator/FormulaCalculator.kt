@@ -35,6 +35,11 @@ class FormulaCalculator(
         notifyAllChanged()
     }
 
+    fun updateCurrent(block: (Option) -> Unit) {
+        block(optFocus())
+        notifyFocusOptionChanged()
+    }
+
     fun fetch() {
         // 检查当前状态
         updateButton()
