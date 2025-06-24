@@ -88,6 +88,11 @@ enum class ButtonKey {
     MILLISECOND,
 
     /**
+     *  现在
+     */
+    NOW,
+
+    /**
      * 加号
      */
     PLUS,

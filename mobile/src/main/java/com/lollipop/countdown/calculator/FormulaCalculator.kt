@@ -150,6 +150,10 @@ class FormulaCalculator(
                 pushOption(OptionType.Millisecond)
             }
 
+            ButtonKey.NOW -> {
+                pushNow()
+            }
+
             ButtonKey.PLUS -> {
                 pushOperator(Operator.PLUS)
             }
@@ -213,15 +217,32 @@ class FormulaCalculator(
     }
 
     /**
-     * 按一个运算符的时候
+     * 按一个now的时候,放入当前的时间
      */
-    private fun pushOption(value: OptionType) {
+    private fun pushNow() {
         val focus = optFocus()
-        if (focus.type == OptionType.None) {
-            focus.type = value
+        if (focus.type == OptionType.None && focus.type == OptionType.None) {
+            focus.type = OptionType.Time
+            focus.value = System.currentTimeMillis()
             notifyFocusOptionChanged()
         } else {
-            pushNewOption().type = value
+            val option = pushNewOption()
+            option.type = OptionType.Time
+            option.value = System.currentTimeMillis()
+            notifyPushNewOption()
+        }
+    }
+
+    /**
+     * 按一个运算符的时候
+     */
+    private fun pushOption(type: OptionType) {
+        val focus = optFocus()
+        if (focus.type == OptionType.None) {
+            focus.type = type
+            notifyFocusOptionChanged()
+        } else {
+            pushNewOption().type = type
             notifyPushNewOption()
         }
     }
@@ -398,6 +419,15 @@ class FormulaCalculator(
 
             OptionType.Millisecond -> {
                 return DateAbacus.turnMillisecond(
+                    calendar = calendar,
+                    target = source,
+                    number = value,
+                    operator = operator
+                )
+            }
+
+            OptionType.Time -> {
+                return DateAbacus.turnTime(
                     calendar = calendar,
                     target = source,
                     number = value,

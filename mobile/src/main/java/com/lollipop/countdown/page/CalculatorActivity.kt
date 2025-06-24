@@ -59,6 +59,7 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         registerKey(ButtonKey.MINUTE, b.minuteButton)
         registerKey(ButtonKey.SECOND, b.secondButton)
         registerKey(ButtonKey.MILLISECOND, b.millisecondButton)
+        registerKey(ButtonKey.NOW, b.nowButton)
     }
 
     private fun registerKey(key: ButtonKey, button: View) {

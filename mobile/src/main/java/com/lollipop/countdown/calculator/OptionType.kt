@@ -9,6 +9,7 @@ enum class OptionType {
     Hour,
     Minute,
     Second,
-    Millisecond
+    Millisecond,
+    Time;
 
 }

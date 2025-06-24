@@ -142,6 +142,35 @@ object DateAbacus {
         )
     }
 
+    fun turnTime(
+        calendar: Calendar,
+        target: DateResult,
+        number: Long,
+        operator: Operator
+    ): DateResult {
+        // 强制把返回结果转换为时间戳
+        val timeTarget = when (target) {
+            is DateResult.Time -> {
+                target
+            }
+
+            is DateResult.Duration -> {
+                DateResult.Time(target.value)
+            }
+
+            else -> {
+                return target
+            }
+        }
+        return turnAnyTime(
+            calendar = calendar,
+            target = timeTarget,
+            number = number,
+            field = Calendar.MILLISECOND,
+            operator = operator
+        )
+    }
+
     fun turnAny(
         calendar: Calendar,
         target: DateResult,

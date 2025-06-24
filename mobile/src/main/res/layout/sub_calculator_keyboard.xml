@@ -189,6 +189,25 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/nowButton"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:background="@drawable/bg_calculator_button"
+            app:keyGridX="2"
+            app:keyGridY="0"
+            app:keySpanX="1"
+            app:keySpanY="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/baseline_today_24"
+                app:tint="@color/light_bar_text" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/divideButton"
             android:layout_width="0px"
             android:layout_height="0px"
