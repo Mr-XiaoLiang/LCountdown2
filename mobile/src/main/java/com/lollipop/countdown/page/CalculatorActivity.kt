@@ -1,7 +1,14 @@
 package com.lollipop.countdown.page
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.lollipop.countdown.R
 import com.lollipop.countdown.base.BasicActivity
 import com.lollipop.countdown.calculator.ButtonHolder
 import com.lollipop.countdown.calculator.ButtonKey
@@ -9,9 +16,16 @@ import com.lollipop.countdown.calculator.DateCalculator
 import com.lollipop.countdown.calculator.DateResult
 import com.lollipop.countdown.calculator.Formula
 import com.lollipop.countdown.calculator.FormulaChanged
+import com.lollipop.countdown.calculator.FormulaOptionListDelegate
+import com.lollipop.countdown.calculator.Operator
 import com.lollipop.countdown.calculator.Option
+import com.lollipop.countdown.calculator.OptionType
 import com.lollipop.countdown.databinding.ActivityCalculatorBinding
+import com.lollipop.countdown.databinding.ItemCalculatorFormulaBinding
 import com.lollipop.countdown.databinding.SubCalculatorKeyboardBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
 
@@ -27,11 +41,17 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         return binding.root
     }
 
-    private val formulaOptionList = mutableListOf<Option>()
+    private val formulaAdapter by lazy {
+        FormulaAdapter(dateCalculator.createFormulaListDelegate())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindButton(binding.keyboardPanel)
+        binding.formulaListView.layoutManager = LinearLayoutManager(
+            this, RecyclerView.VERTICAL, false
+        )
+        binding.formulaListView.adapter = formulaAdapter
     }
 
     private fun bindButton(b: SubCalculatorKeyboardBinding) {
@@ -99,22 +119,143 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         notifyFormulaChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun notifyFormulaChanged() {
-        formulaOptionList.clear()
-        formulaOptionList.addAll(dateCalculator.focus().optionList)
-        // TODO("Not yet implemented")
+        formulaAdapter.notifyDataSetChanged()
     }
 
     private fun notifyOptionChanged(index: Int) {
-        // TODO("Not yet implemented")
+        formulaAdapter.notifyItemChanged(index)
     }
 
     private fun notifyOptionRemoved(index: Int) {
-        // TODO("Not yet implemented")
+        formulaAdapter.notifyItemRemoved(index)
     }
 
     private fun notifyOptionAdded(index: Int) {
-        // TODO("Not yet implemented")
+        formulaAdapter.notifyItemInserted(index)
+        binding.formulaListView.scrollToPosition(index)
+    }
+
+    private class FormulaAdapter(
+        private val formulaList: FormulaOptionListDelegate
+    ) : RecyclerView.Adapter<FormulaItemHolder>() {
+
+        private var layoutInflater: LayoutInflater? = null
+
+        private fun getLayoutInflater(parent: ViewGroup): LayoutInflater {
+            return layoutInflater ?: LayoutInflater.from(parent.context).also {
+                layoutInflater = it
+            }
+        }
+
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): FormulaItemHolder {
+            return FormulaItemHolder(
+                ItemCalculatorFormulaBinding.inflate(
+                    getLayoutInflater(parent),
+                    parent,
+                    false
+                )
+            )
+        }
+
+        private fun isSelected(position: Int): Boolean {
+            return position == formulaList.size - 1
+        }
+
+        override fun onBindViewHolder(
+            holder: FormulaItemHolder,
+            position: Int
+        ) {
+            holder.bind(formulaList[position], isSelected(position))
+        }
+
+        override fun getItemCount(): Int {
+            return formulaList.size
+        }
+
+    }
+
+    private class FormulaItemHolder(
+        val binding: ItemCalculatorFormulaBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+
+        fun bind(option: Option, selected: Boolean) {
+            binding.optionIconView.setImageResource(getOperatorIcon(option.operator))
+            binding.formulaValueView.text = getFormulaValue(option.type, option.value)
+            binding.root.elevation = if (selected) {
+                TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    6f,
+                    itemView.resources.displayMetrics
+                )
+            } else {
+                0f
+            }
+        }
+
+        private fun getFormulaValue(type: OptionType, value: Long): String {
+            when (type) {
+                OptionType.None -> {
+                    return value.toString()
+                }
+
+                OptionType.Year -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Month -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Week -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Day -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Hour -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Minute -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Second -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Millisecond -> {
+                    return "$value ${getFormulaSuffix(type)}"
+                }
+
+                OptionType.Time -> {
+                    return sdf.format(Date(value))
+                }
+            }
+        }
+
+        private fun getFormulaSuffix(type: OptionType): String {
+            return type.getValue(binding.root.context)
+        }
+
+        private fun getOperatorIcon(operator: Operator): Int {
+            return when (operator) {
+                Operator.DEFAULT, Operator.PLUS -> R.drawable.ic_glyph_op_add
+                Operator.MINUS -> R.drawable.ic_glyph_op_sub
+                Operator.MULTIPLY -> R.drawable.ic_glyph_op_mul
+                Operator.DIVIDE -> R.drawable.ic_glyph_op_div
+            }
+        }
+
     }
 
     private class KeyHolder(key: ButtonKey, val button: View) : ButtonHolder(key) {

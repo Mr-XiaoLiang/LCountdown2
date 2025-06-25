@@ -23,4 +23,7 @@
     <color name="item_text_on_content">#555555</color>
 
     <color name="summary_on_content">#555555</color>
+
+    <color name="glyph_on_content">#333333</color>
+    <color name="glyph_on_content_select">#FF018786</color>
 </resources>

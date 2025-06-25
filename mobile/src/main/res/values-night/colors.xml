@@ -20,4 +20,7 @@
     <color name="item_text_on_content">#D0D0D0</color>
 
     <color name="summary_on_content">#D0D0D0</color>
+
+    <color name="glyph_on_content">#EEEEEE</color>
+    <color name="glyph_on_content_select">#01D1D0</color>
 </resources>

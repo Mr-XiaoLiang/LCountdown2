@@ -12,4 +12,13 @@
     <string name="label_minute">分</string>
     <string name="label_second">秒</string>
     <string name="label_millisecond">毫秒</string>
+
+    <string name="formula_year">年</string>
+    <string name="formula_month">月</string>
+    <string name="formula_week">周</string>
+    <string name="formula_day">日</string>
+    <string name="formula_hour">时</string>
+    <string name="formula_minute">分</string>
+    <string name="formula_second">秒</string>
+    <string name="formula_millisecond">毫秒</string>
 </resources>
