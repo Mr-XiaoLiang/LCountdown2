@@ -94,6 +94,10 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         // TODO("Not yet implemented")
     }
 
+    override fun afterButtonClick() {
+        previewDelegate.previewMode(!dateCalculator.isEnd)
+    }
+
     override fun onPreview(result: DateResult?) {
         previewDelegate.update(result)
     }

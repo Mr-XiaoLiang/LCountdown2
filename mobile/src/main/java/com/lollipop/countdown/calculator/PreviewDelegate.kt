@@ -31,6 +31,14 @@ class PreviewDelegate(private val previewView: TextView) : PopupMenu.OnMenuItemC
         previewView.setOnClickListener { onViewClick() }
     }
 
+    fun previewMode(onlyPreview: Boolean) {
+        previewView.alpha = if (onlyPreview) {
+            0.5f
+        } else {
+            1f
+        }
+    }
+
     private fun onViewClick() {
         val r = result ?: return
         if (r is DateResult.None) {

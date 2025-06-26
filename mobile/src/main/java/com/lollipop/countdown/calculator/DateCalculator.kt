@@ -25,6 +25,9 @@ class DateCalculator(
     var currentFormula: FormulaCalculator? = null
         private set
 
+    var isEnd = false
+        private set
+
     private fun notifyFormulaChanged(formula: FormulaChanged) {
         callback.onFormulaChanged(formula)
         changedCallbackManager.notify {
@@ -75,9 +78,16 @@ class DateCalculator(
     }
 
     override fun onButtonClick(button: ButtonKey) {
+        // 只有在结束之后，按下新的按键，才会开始新的公式计算
+        if (isEnd) {
+            currentFormula = createFormulaCalculator()
+            currentFormula?.fetch()
+            isEnd = false
+        }
         val focus = focus()
         focus.push(button)
         mayNeedNewFormula()
+        callback.afterButtonClick()
     }
 
     fun createFormulaListDelegate(): FormulaOptionListDelegate {
@@ -91,9 +101,8 @@ class DateCalculator(
         }
         val formula = current.getFinallyFormula()
         if (formula != null) {
+            isEnd = true
             callback.onNewHistory(formula)
-            currentFormula = createFormulaCalculator()
-            currentFormula?.fetch()
         }
     }
 
@@ -114,6 +123,8 @@ class DateCalculator(
     interface CalculatorCallback : PreviewCallback, FormulaChangedCallback {
 
         fun onNewHistory(formula: Formula)
+
+        fun afterButtonClick()
 
     }
 
