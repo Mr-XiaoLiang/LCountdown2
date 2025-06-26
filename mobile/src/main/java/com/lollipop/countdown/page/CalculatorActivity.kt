@@ -20,12 +20,12 @@ import com.lollipop.countdown.calculator.FormulaOptionListDelegate
 import com.lollipop.countdown.calculator.Operator
 import com.lollipop.countdown.calculator.Option
 import com.lollipop.countdown.calculator.OptionType
+import com.lollipop.countdown.calculator.PreviewDelegate
+import com.lollipop.countdown.calculator.TimeFormat
 import com.lollipop.countdown.databinding.ActivityCalculatorBinding
 import com.lollipop.countdown.databinding.ItemCalculatorFormulaBinding
 import com.lollipop.countdown.databinding.SubCalculatorKeyboardBinding
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
 
@@ -43,6 +43,10 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
 
     private val formulaAdapter by lazy {
         FormulaAdapter(dateCalculator.createFormulaListDelegate())
+    }
+
+    private val previewDelegate by lazy {
+        PreviewDelegate(binding.resultView)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +95,7 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
     }
 
     override fun onPreview(result: DateResult?) {
-        // TODO("Not yet implemented")
+        previewDelegate.update(result)
     }
 
     override fun onFormulaChanged(formula: FormulaChanged) {
@@ -183,7 +187,7 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         val binding: ItemCalculatorFormulaBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+        private val sdf = TimeFormat.Millisecond
 
         fun bind(option: Option, selected: Boolean) {
             binding.optionIconView.setImageResource(getOperatorIcon(option.operator))

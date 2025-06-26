@@ -3,15 +3,14 @@ package com.lollipop.countdown.data
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import java.text.SimpleDateFormat
+import com.lollipop.countdown.calculator.TimeFormat
 import java.util.Date
-import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
 object TimeCache {
 
     private val dateFormat by lazy {
-        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        TimeFormat.DateTime
     }
 
     private val historyTimeList = CopyOnWriteArrayList<TimeInfo.History>()
@@ -34,7 +33,7 @@ object TimeCache {
     }
 
     fun formatTime(time: Long): String {
-        return dateFormat.format(Date(time))
+        return dateFormat.format(time)
     }
 
     private fun onActivityResumed(firstResume: Boolean) {
