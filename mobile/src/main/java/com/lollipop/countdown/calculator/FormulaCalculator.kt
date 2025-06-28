@@ -11,6 +11,13 @@ class FormulaCalculator(
     private val previewCallback: PreviewCallback
 ) : ButtonController {
 
+    companion object {
+        /**
+         * 1970年之前的时间，在日历里显示为负数，所以累加时间的时候，得叠加上
+         */
+        const val TIME_BUFFER = 62167507200000
+    }
+
     /**
      * 运算操作的列表
      */
@@ -135,6 +142,10 @@ class FormulaCalculator(
                 pushOption(OptionType.Month)
             }
 
+            ButtonKey.WEEK -> {
+                pushOption(OptionType.Week)
+            }
+
             ButtonKey.DAY -> {
                 pushOption(OptionType.Day)
             }
@@ -194,7 +205,7 @@ class FormulaCalculator(
      */
     private fun pushOperator(operator: Operator) {
         val focus = optFocus()
-        if (focus.operator == Operator.DEFAULT) {
+        if (focus.operator == Operator.DEFAULT || focus.value == 0L) {
             focus.operator = operator
             notifyFocusOptionChanged()
         } else {
@@ -226,16 +237,29 @@ class FormulaCalculator(
      */
     private fun pushNow() {
         val focus = optFocus()
-        if (focus.type == OptionType.None && focus.type == OptionType.None) {
+        var timeValue = System.currentTimeMillis()
+        optionList.forEach {
+            if (it.type == OptionType.Time) {
+                // 需要累加1970年之前的时间，否则数量不够
+                timeValue += TIME_BUFFER
+            }
+        }
+        if (focus.type == OptionType.None) {
             focus.type = OptionType.Time
-            focus.value = System.currentTimeMillis()
+            focus.value = timeValue
+            if (focus.operator == Operator.DEFAULT) {
+                focus.operator = Operator.PLUS
+            }
             notifyFocusOptionChanged()
         } else {
             val option = pushNewOption()
             option.type = OptionType.Time
-            option.value = System.currentTimeMillis()
+            option.value = timeValue
+            option.operator = Operator.PLUS
             notifyPushNewOption()
         }
+        pushNewOption()
+        notifyPushNewOption()
     }
 
     /**
@@ -266,6 +290,12 @@ class FormulaCalculator(
      */
     private fun backspace() {
         val option = optFocus()
+        if (option.type == OptionType.Time) {
+            option.value = 0
+            option.type = OptionType.None
+            notifyFocusOptionChanged()
+            return
+        }
         // 值不为0的时候，就减掉一个
         if (option.value > 0) {
             option.value = option.value.div(10)
@@ -286,8 +316,9 @@ class FormulaCalculator(
         }
         // 如果不是optionList的最后一个，就删除这个option
         if (optionList.size > 1) {
-            optionList.removeAt(optionList.lastIndex)
-            notifyFocusOptionRemoved()
+            val index = optionList.lastIndex
+            optionList.removeAt(index)
+            notifyFocusOptionRemoved(index)
         }
     }
 
@@ -299,8 +330,8 @@ class FormulaCalculator(
         changedCallback.onFormulaChanged(FormulaChanged.Changed(optionList.lastIndex))
     }
 
-    private fun notifyFocusOptionRemoved() {
-        changedCallback.onFormulaChanged(FormulaChanged.Removed(optionList.lastIndex))
+    private fun notifyFocusOptionRemoved(index: Int) {
+        changedCallback.onFormulaChanged(FormulaChanged.Removed(index))
     }
 
     private fun notifyAllChanged() {
@@ -326,6 +357,10 @@ class FormulaCalculator(
     }
 
     private fun preview() {
+        if (optionList.size < 2) {
+            previewCallback.onPreview(null)
+            return
+        }
         val result = calculateImpl().getOrNull()
         logD("preview: $result")
         previewCallback.onPreview(result)
@@ -339,7 +374,11 @@ class FormulaCalculator(
             if (optionList.isEmpty()) {
                 return Result.success(DateResult.None)
             }
-            var result: DateResult = DateResult.START_TIME
+            var result: DateResult = if (optionList[0].type == OptionType.Time) {
+                DateResult.START_TIME
+            } else {
+                DateResult.Duration(0)
+            }
             optionList.forEach { option ->
                 result = summation(result, option)
             }
@@ -433,7 +472,6 @@ class FormulaCalculator(
 
             OptionType.Time -> {
                 return DateAbacus.turnTime(
-                    calendar = calendar,
                     target = source,
                     number = value,
                     operator = operator
@@ -447,21 +485,38 @@ class FormulaCalculator(
     }
 
     override fun updateButton(holder: ButtonHolder) {
-        if (isComplete) {
-            holder.setEnable(false)
+        if (optionList.size < 2) {
+            holder.setEnable(true)
             return
         }
-        val focus = optFocus()
+        var focus = optFocus()
+        if (isComplete) {
+            focus = Option.EMPTY
+        }
         val buttonKey = holder.buttonKey
-        if (buttonKey.isDateOperator()) {
+        var isEnable = true
+        // 没有输入运算符，那么要求先输入运算符
+        if (focus.operator == Operator.DEFAULT) {
+            isEnable = if (buttonKey.isMathOperator()) {
+                true
+            } else if (buttonKey.isBackspace()) {
+                optionList.size > 1
+            } else {
+                false
+            }
+        }
+        if (isEnable && buttonKey.isDateOperator()) {
             // 如果操作符是高阶函数，比如乘法和除法，就不能输入日期
-            holder.setEnable(!(focus.operator.isHighLevel()))
-        } else if (buttonKey.isMathHighLevelOperator()) {
+            isEnable = !(focus.operator.isHighLevel())
+        }
+        if (isEnable && buttonKey.isMathHighLevelOperator()) {
             // 如果当前不是日期类型，那么就可以使用高阶函数
             holder.setEnable(focus.type == OptionType.None)
-        } else if (buttonKey == ButtonKey.CLEAR || buttonKey == ButtonKey.BACKSPACE) {
+        }
+        if (isEnable && buttonKey.isBackspace()) {
             holder.setEnable(optionList.size > 1 || !(focus.isEmpty()))
         }
+        holder.setEnable(isEnable)
     }
 
     private fun logE(message: String, e: Throwable) {

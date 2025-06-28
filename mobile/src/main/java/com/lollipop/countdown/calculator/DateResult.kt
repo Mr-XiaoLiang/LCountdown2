@@ -5,13 +5,14 @@ sealed class DateResult {
     companion object {
         /**
          * 默认的开始时间
-         * 0年0月0日0时0分0秒0毫秒
+         * 由于公元0年是负数，会对时间戳计算产生负担，因此默认还是从1970年开始计算
          */
-        val START_TIME = Time(-62167507200000)
+        val START_TIME = Time(0)
 
     }
 
     class Time(val value: Long) : DateResult()
+
     class Duration(val value: Long) : DateResult()
 
     object None : DateResult()

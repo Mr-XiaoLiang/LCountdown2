@@ -10,6 +10,9 @@ class Option {
 
         @JvmStatic
         val DEFAULT_TYPE = OptionType.None
+
+        @JvmStatic
+        val EMPTY = Option()
     }
 
     var value: Long = DEFAULT_VALUE

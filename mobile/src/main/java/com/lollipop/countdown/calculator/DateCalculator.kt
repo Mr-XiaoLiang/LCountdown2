@@ -62,6 +62,10 @@ class DateCalculator(
         buttonManager.register(holder)
     }
 
+    fun onResume() {
+        mayNeedNewFormula()
+    }
+
     fun resume(formula: Formula) {
         val current = currentFormula
         if (current != null) {
@@ -97,6 +101,10 @@ class DateCalculator(
     private fun mayNeedNewFormula() {
         val current = currentFormula
         if (current == null) {
+            isEnd = false
+            currentFormula = createFormulaCalculator()
+            currentFormula?.fetch()
+            callback.onFormulaChanged(FormulaChanged.All)
             return
         }
         val formula = current.getFinallyFormula()

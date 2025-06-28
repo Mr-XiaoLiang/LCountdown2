@@ -3,6 +3,7 @@ package com.lollipop.countdown.calculator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.util.Log
 import android.view.MenuItem
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -135,7 +136,11 @@ class PreviewDelegate(private val previewView: TextView) : PopupMenu.OnMenuItemC
     private fun getByDuration(time: Long): String {
         val builder = StringBuilder()
         var value = time
-        while (value > 0) {
+        if (time < 0) {
+            builder.append("-")
+            value = -value
+        }
+        while (value > 0L) {
             when {
                 value >= DateAbacus.ONE_YEAR -> {
                     val year = value / DateAbacus.ONE_YEAR
@@ -181,8 +186,11 @@ class PreviewDelegate(private val previewView: TextView) : PopupMenu.OnMenuItemC
 
                 else -> {
                     val millisecond = value
+                    // 用完要清零
+                    value = 0L
                     builder.append(millisecond)
-                        .append(labelCache.getLabel(context, R.string.label_millisecond))
+                    Log.e("Lollipop", "getByDuration: ${builder.length}")
+                    builder.append(labelCache.getLabel(context, R.string.label_millisecond))
                 }
             }
         }

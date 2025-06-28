@@ -41,8 +41,12 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         return binding.root
     }
 
+    private val formulaListDelegate by lazy {
+        dateCalculator.createFormulaListDelegate()
+    }
+
     private val formulaAdapter by lazy {
-        FormulaAdapter(dateCalculator.createFormulaListDelegate())
+        FormulaAdapter(formulaListDelegate)
     }
 
     private val previewDelegate by lazy {
@@ -78,6 +82,7 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
         registerKey(ButtonKey.NUMBER_9, b.number9Button)
         registerKey(ButtonKey.YEAR, b.yearButton)
         registerKey(ButtonKey.MONTH, b.monthButton)
+        registerKey(ButtonKey.WEEK, b.weekButton)
         registerKey(ButtonKey.DAY, b.dayButton)
         registerKey(ButtonKey.HOUR, b.hourButton)
         registerKey(ButtonKey.MINUTE, b.minuteButton)
@@ -124,6 +129,7 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
 
     override fun onResume() {
         super.onResume()
+        dateCalculator.onResume()
         notifyFormulaChanged()
     }
 
@@ -137,10 +143,15 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
     }
 
     private fun notifyOptionRemoved(index: Int) {
+        // 删除的可能是最后一个，那么我们要考虑刷新最后一个
         formulaAdapter.notifyItemRemoved(index)
+        formulaAdapter.notifyItemChanged(formulaListDelegate.size - 1)
     }
 
     private fun notifyOptionAdded(index: Int) {
+        if (index > 0) {
+            formulaAdapter.notifyItemChanged(index - 1)
+        }
         formulaAdapter.notifyItemInserted(index)
         binding.formulaListView.scrollToPosition(index)
     }
@@ -257,7 +268,8 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
 
         private fun getOperatorIcon(operator: Operator): Int {
             return when (operator) {
-                Operator.DEFAULT, Operator.PLUS -> R.drawable.ic_glyph_op_add
+                Operator.DEFAULT -> 0
+                Operator.PLUS -> R.drawable.ic_glyph_op_add
                 Operator.MINUS -> R.drawable.ic_glyph_op_sub
                 Operator.MULTIPLY -> R.drawable.ic_glyph_op_mul
                 Operator.DIVIDE -> R.drawable.ic_glyph_op_div
@@ -267,12 +279,18 @@ class CalculatorActivity : BasicActivity(), DateCalculator.CalculatorCallback {
     }
 
     private class KeyHolder(key: ButtonKey, val button: View) : ButtonHolder(key) {
+
+        init {
+            bind(button)
+        }
+
         override fun setEnable(enable: Boolean) {
             button.alpha = if (enable) {
                 1f
             } else {
                 0.5f
             }
+            button.isClickable = enable
         }
     }
 

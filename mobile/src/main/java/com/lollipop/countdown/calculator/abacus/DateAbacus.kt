@@ -6,7 +6,7 @@ import java.util.Calendar
 
 object DateAbacus {
 
-    const val ONE_SECOND = 1000
+    const val ONE_SECOND = 1000L
     const val ONE_MINUTE = ONE_SECOND * 60
     const val ONE_HOUR = ONE_MINUTE * 60
     const val ONE_DAY = ONE_HOUR * 24
@@ -23,7 +23,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_YEAR,
             field = Calendar.YEAR
@@ -39,7 +39,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_MONTH,
             field = Calendar.MONTH
@@ -55,7 +55,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_WEEK,
             field = Calendar.WEEK_OF_YEAR
@@ -71,7 +71,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_DAY,
             field = Calendar.DAY_OF_MONTH
@@ -87,7 +87,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_HOUR,
             field = Calendar.HOUR_OF_DAY
@@ -103,7 +103,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_MINUTE,
             field = Calendar.MINUTE
@@ -119,7 +119,7 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = ONE_SECOND,
             field = Calendar.SECOND
@@ -135,15 +135,25 @@ object DateAbacus {
         return turnAny(
             calendar = calendar,
             target = target,
-            number = number,
+            number = number.numberToInt(),
             operator = operator,
             step = 1,
             field = Calendar.MILLISECOND
         )
     }
 
+    private fun Long.numberToInt(): Int {
+        val number = this
+        if (number > Int.MAX_VALUE) {
+            return Int.MAX_VALUE
+        }
+        if (number < Int.MIN_VALUE) {
+            return Int.MIN_VALUE
+        }
+        return number.toInt()
+    }
+
     fun turnTime(
-        calendar: Calendar,
         target: DateResult,
         number: Long,
         operator: Operator
@@ -162,21 +172,21 @@ object DateAbacus {
                 return target
             }
         }
-        return turnAnyTime(
-            calendar = calendar,
-            target = timeTarget,
-            number = number,
-            field = Calendar.MILLISECOND,
-            operator = operator
+        return DateResult.Time(
+            NumberAbacus.turn(
+                timeTarget.value,
+                number,
+                operator
+            )
         )
     }
 
     fun turnAny(
         calendar: Calendar,
         target: DateResult,
-        number: Long,
+        number: Int,
         operator: Operator,
-        step: Int,
+        step: Long,
         field: Int
     ): DateResult {
         return when (target) {
@@ -208,14 +218,14 @@ object DateAbacus {
 
     private fun turnAnyDuration(
         target: Long,
-        number: Long,
-        step: Int,
+        number: Int,
+        step: Long,
         operator: Operator
     ): DateResult.Duration {
         return DateResult.Duration(
             NumberAbacus.turn(
                 target,
-                number * step,
+                number.toLong() * step,
                 operator
             )
         )
@@ -224,20 +234,20 @@ object DateAbacus {
     private fun turnAnyTime(
         calendar: Calendar,
         target: DateResult.Time,
-        number: Long,
+        number: Int,
         field: Int,
         operator: Operator
     ): DateResult.Time {
         when (operator) {
             Operator.PLUS, Operator.DEFAULT -> {
                 calendar.timeInMillis = target.value
-                calendar.add(field, number.toInt())
+                calendar.add(field, number)
                 return DateResult.Time(calendar.timeInMillis)
             }
 
             Operator.MINUS -> {
                 calendar.timeInMillis = target.value
-                calendar.add(field, (number.toInt()) * -1)
+                calendar.add(field, (number) * -1)
                 return DateResult.Time(calendar.timeInMillis)
             }
 

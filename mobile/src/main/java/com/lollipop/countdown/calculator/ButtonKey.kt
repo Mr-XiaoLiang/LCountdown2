@@ -63,6 +63,11 @@ enum class ButtonKey {
     MONTH,
 
     /**
+     * 周
+     */
+    WEEK,
+
+    /**
      * 日
      */
     DAY,
@@ -150,8 +155,16 @@ enum class ButtonKey {
         return this in arrayOf(PLUS, MINUS)
     }
 
+    fun isMathOperator(): Boolean {
+        return isMathHighLevelOperator() || isMathLowLevelOperator() || this == EQUALS
+    }
+
     fun isDateOperator(): Boolean {
-        return this in arrayOf(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND)
+        return this in arrayOf(YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND)
+    }
+
+    fun isBackspace(): Boolean {
+        return this == BACKSPACE || this == CLEAR
     }
 
 }
