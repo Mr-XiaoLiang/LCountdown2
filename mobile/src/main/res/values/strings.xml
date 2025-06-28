@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mobile</string>
+    <string name="app_name">倒计时</string>
     <string name="label_button_timer">计时器</string>
     <string name="label_button_countdown">倒计时</string>
     <string name="done">完成</string>
