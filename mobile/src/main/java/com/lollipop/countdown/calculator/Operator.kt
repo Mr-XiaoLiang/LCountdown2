@@ -1,34 +1,40 @@
 package com.lollipop.countdown.calculator
 
-enum class Operator {
+enum class Operator(val key: String) {
 
     /**
      * 默认的，它等价于 +
      */
-    DEFAULT,
+    DEFAULT("p"),
 
     /**
      * 加号
      */
-    PLUS,
+    PLUS("p"),
 
     /**
      * 减号
      */
-    MINUS,
+    MINUS("s"),
 
     /**
      * 乘号
      */
-    MULTIPLY,
+    MULTIPLY("m"),
 
     /**
      * 除号
      */
-    DIVIDE;
+    DIVIDE("d");
 
     fun isHighLevel(): Boolean {
         return this == MULTIPLY || this == DIVIDE
+    }
+
+    companion object {
+        fun find(key: String, def: Operator): Operator {
+            return entries.find { it.key == key } ?: def
+        }
     }
 
 }

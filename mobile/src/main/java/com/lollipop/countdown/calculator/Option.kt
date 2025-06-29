@@ -13,6 +13,18 @@ class Option {
 
         @JvmStatic
         val EMPTY = Option()
+
+        fun parse(formatValue: String): Option? {
+            val split = formatValue.split(",")
+            if (split.size < 3) {
+                return null
+            }
+            return Option().apply {
+                value = split[0].toLong()
+                operator = Operator.find(split[1], DEFAULT_OPERATOR)
+                type = OptionType.find(split[2], DEFAULT_TYPE)
+            }
+        }
     }
 
     var value: Long = DEFAULT_VALUE
@@ -32,6 +44,10 @@ class Option {
             return false
         }
         return true
+    }
+
+    fun format(): String {
+        return "${operator.key},${type.key},$value"
     }
 
 }
